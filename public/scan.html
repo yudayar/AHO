@@ -222,47 +222,34 @@
         return false;
       }
 
-      const onScanSuccess = (decodedText) => {
-  if (!checkAccessTime()) {
-    displayErrorPopup("Ooppss, maaf absensi telah ditutup.");
-    return;
-  }
+function onScanSuccess(decodedText, decodedResult) {
+    // Misal decodedText berbentuk JSON string, lakukan parsing
+    const scannedData = JSON.parse(decodedText);
 
-  try {
-    const qrData = JSON.parse(decodedText);
-    if (!qrData.name || !qrData.class) {
-      throw new Error("QR Code tidak memiliki data yang lengkap.");
-    }
+    // Contoh struktur barcode: {"name":"Yuda Arif Rahman","class":"XI-PPLG-2"}
+    const { name, class: kelas } = scannedData;
 
-    const { name, class: studentClassData } = qrData;
+    // Tampilkan hasil scan di console (opsional)
+    console.log(`Nama: ${name}, Kelas: ${kelas}`);
 
-    studentName.textContent = `Nama: ${name}`;
-    studentClass.textContent = `Kelas: ${studentClassData}`;
-    timeInfo.textContent = `Waktu: ${new Date().toLocaleString()}`;
-
-    successContainer.style.display = "block";
-    qrBox.style.display = "none";
-    headingText.style.display = "none";
-    scheduleText.style.display = "none";
-
-    // Mengirim data ke server
+    // Kirim data ke server
     fetch('https://aho-pi.vercel.app/api/absensi', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        id: '123',  // Pastikan id sesuai dengan apa yang diharapkan backend
-        class: '10A',
-        name: 'John Doe',
-        time: new Date().toLocaleString()  // Pastikan format waktu sesuai yang diharapkan backend
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: name,
+            class: kelas,
+            time: new Date().toLocaleString(), // Waktu saat ini
+        }),
     })
-})
-.then(response => response.json())
-.then(data => {
-    console.log('Data berhasil disimpan:', data);
-})
-.catch(error => {
-    console.error('Terjadi kesalahan:', error);
-});
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Data berhasil disimpan:', data);
+        })
+        .catch((error) => {
+            console.error('Terjadi kesalahan:', error);
+        });
+}
 
     html5QrCode.stop();
   } catch (error) {
