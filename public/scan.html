@@ -246,7 +246,7 @@
     scheduleText.style.display = "none";
 
     // Mengirim data ke server
-    fetch('https://aho-pi.vercel.app/absensi', {
+    fetch('https://aho-pi.vercel.app/api/absensi', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
