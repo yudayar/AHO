@@ -67,6 +67,7 @@ app.get('/scan', (req, res) => {
 app.post('/absensi', (req, res) => {
     const { name, class: studentClass, time } = req.body;
 
+    // Cek jika data tidak lengkap
     if (!name || !studentClass || !time) {
         return res.status(400).json({
             message: 'Gagal melakukan absensi. Data tidak lengkap!',
@@ -75,16 +76,19 @@ app.post('/absensi', (req, res) => {
     }
 
     try {
+        // Memperbaiki format waktu
         const correctedTime = time.replace(/\./g, ':');
         const formattedTime = dayjs(correctedTime, 'D/M/YYYY, HH:mm:ss', true).format('YYYY-MM-DD HH:mm:ss');
+        
         if (!formattedTime || formattedTime === 'Invalid Date') {
             throw new Error(`Invalid time value: ${time}`);
         }
 
         console.log(`Inserting data into database: name = ${name}, class = ${studentClass}, time = ${formattedTime}`);
 
+        // Query untuk menyimpan data
         const query = 'INSERT INTO attendance (name, class, time) VALUES (?, ?, ?)';
-        db.query(query, [name, studentClass, formattedTime], (err) => {
+        db.query(query, [name, studentClass, formattedTime], (err, results) => {
             if (err) {
                 console.error('Error saving to database:', err);
                 return res.status(500).json({
@@ -94,9 +98,10 @@ app.post('/absensi', (req, res) => {
                 });
             }
 
+            // Mengirimkan respons sukses
             res.json({
                 message: 'Data berhasil disimpan!',
-                data: newEntry
+                data: { name, studentClass, formattedTime }
             });
         });
     } catch (error) {
