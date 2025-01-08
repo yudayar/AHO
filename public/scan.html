@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AHO - Scan QR</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
   <link href="/assets/img/logo.png" rel="shortcut icon">
@@ -147,7 +147,7 @@
 </style>
 <body>
   <header>
-    <img src="../img/319725507_553156856272605_7083694533489981635_n-removebg-preview.png" alt="AHO Logo" class="logo">
+    <img src="assets/img/319725507_553156856272605_7083694533489981635_n-removebg-preview.png" alt="AHO Logo" class="logo">
     <h1>AHO</h1>
   </header>
 
@@ -179,8 +179,6 @@
     <button onclick="closePopup()">OK</button>
   </div>
 
-  <button id="reset-button" onclick="resetScan()" class="reset-button">Scan Ulang</button>
-
   <nav class="bottom-nav">
     <a href="/home" class="nav-item"><i class="fas fa-home"></i></a>
     <a href="/scan" class="nav-item"><i class="fas fa-qrcode"></i></a>
@@ -211,7 +209,7 @@
         const currentTime = now.getHours() * 60 + now.getMinutes();
 
         const morningStart = 5 * 60 + 30;
-        const morningEnd = 6 * 60 + 55;
+        const morningEnd = 18 * 60 + 55;
         const afternoonStart = 15 * 60 + 25;
         const afternoonEnd = 15 * 60 + 35;
 
