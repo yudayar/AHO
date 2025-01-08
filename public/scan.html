@@ -247,21 +247,22 @@
 
     // Mengirim data ke server
     fetch('https://aho-pi.vercel.app/absensi', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name,
-        class: studentClassData,
-        time: new Date().toLocaleString(),
-      })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        id: '123',  // Pastikan id sesuai dengan apa yang diharapkan backend
+        class: '10A',
+        name: 'John Doe',
+        time: new Date().toLocaleString()  // Pastikan format waktu sesuai yang diharapkan backend
     })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Data berhasil disimpan:', data);
-    })
-    .catch(error => {
-      console.error('Terjadi kesalahan:', error);
-    });
+})
+.then(response => response.json())
+.then(data => {
+    console.log('Data berhasil disimpan:', data);
+})
+.catch(error => {
+    console.error('Terjadi kesalahan:', error);
+});
 
     html5QrCode.stop();
   } catch (error) {
