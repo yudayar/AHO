@@ -64,7 +64,7 @@ app.get('/scan', (req, res) => {
 });
 
 // Endpoint for saving attendance
-app.post('/absensi', (req, res) => {
+app.post('api/absensi', (req, res) => {
     const { name, class: studentClass, time } = req.body;
 
     // Cek jika data tidak lengkap
