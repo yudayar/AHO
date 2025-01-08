@@ -225,10 +225,13 @@
         const { name, class: kelas } = scannedData;
         console.log(`Nama: ${name}, Kelas: ${kelas}`);
 
-        fetch('https://aho-pi.vercel.app/api/absensi', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+        fetch('https://aho-jade.vercel.app/api/absensi', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+})
             name: name,
             class: kelas,
             time: new Date().toLocaleString(),
