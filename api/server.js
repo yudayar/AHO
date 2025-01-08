@@ -94,19 +94,6 @@ app.post('/absensi', (req, res) => {
                 });
             }
 
-            const filePath = path.join(__dirname, 'data', 'data.json');
-            const newEntry = { name, class: studentClass, time: formattedTime };
-
-            let jsonData = [];
-            if (fs.existsSync(filePath)) {
-                const fileContent = fs.readFileSync(filePath, 'utf-8');
-                jsonData = JSON.parse(fileContent);
-            }
-
-            jsonData.push(newEntry);
-
-            fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), 'utf-8');
-
             res.json({
                 message: 'Data berhasil disimpan!',
                 data: newEntry
