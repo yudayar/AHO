@@ -1,20 +1,14 @@
-// api/absensi.js
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { name, class: className, time } = req.body;
-    
-    // Proses penyimpanan ke database atau operasi lainnya
-    try {
-      // Misalnya, simpan data ke database
-      const savedData = { name, className, time };
+export default function handler(req, res) {
+    if (req.method === 'POST') {
+        const { name, class: kelas, time } = req.body;
+        if (!name || !kelas || !time) {
+            return res.status(400).json({ error: 'Invalid input' });
+        }
 
-      // Kirim response sukses
-      res.status(200).json(savedData);
-    } catch (error) {
-      res.status(500).json({ error: 'Gagal menyimpan data' });
+        // Simpan data (dummy response untuk tes)
+        return res.status(200).json({ message: 'Data berhasil disimpan', data: { name, kelas, time } });
     }
-  } else {
-    // Jika bukan POST
-    res.status(405).json({ error: 'Method Not Allowed' });
-  }
+
+    // Jika metode bukan POST
+    return res.status(405).json({ error: 'Method Not Allowed' });
 }
