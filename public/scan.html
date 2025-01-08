@@ -192,98 +192,97 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const qrBox = document.getElementById("qr-box");
-      const successContainer = document.getElementById("success-container");
-      const studentName = document.getElementById("student-name");
-      const studentClass = document.getElementById("student-class");
-      const timeInfo = document.getElementById("time-info");
-      const headingText = document.querySelector("main h2");
-      const scheduleText = document.getElementById("schedule-text");
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const qrBox = document.getElementById("qr-box");
+    const successContainer = document.getElementById("success-container");
+    const studentName = document.getElementById("student-name");
+    const studentClass = document.getElementById("student-class");
+    const timeInfo = document.getElementById("time-info");
+    const headingText = document.querySelector("main h2");
+    const scheduleText = document.getElementById("schedule-text");
 
-      const html5QrCode = new Html5Qrcode("qr-box");
+    const html5QrCode = new Html5Qrcode("qr-box");
 
-      function checkAccessTime() {
-        const now = new Date();
-        const currentTime = now.getHours() * 60 + now.getMinutes();
+    function checkAccessTime() {
+      const now = new Date();
+      const currentTime = now.getHours() * 60 + now.getMinutes();
 
-        const morningStart = 5 * 60 + 30;
-        const morningEnd = 18 * 60 + 55;
-        const afternoonStart = 15 * 60 + 25;
-        const afternoonEnd = 15 * 60 + 35;
+      const morningStart = 5 * 60 + 30;
+      const morningEnd = 18 * 60 + 55;
+      const afternoonStart = 15 * 60 + 25;
+      const afternoonEnd = 15 * 60 + 35;
 
-        if (
-          (currentTime >= morningStart && currentTime < morningEnd) || 
-          (currentTime >= afternoonStart && currentTime < afternoonEnd)
-        ) {
-          return true;
-        }
-        return false;
-      }
+      return (
+        (currentTime >= morningStart && currentTime < morningEnd) || 
+        (currentTime >= afternoonStart && currentTime < afternoonEnd)
+      );
+    }
 
-   function onScanSuccess(decodedText, decodedResult) {
-    // Misal decodedText berbentuk JSON string, lakukan parsing
-    const scannedData = JSON.parse(decodedText);
+    function onScanSuccess(decodedText, decodedResult) {
+      try {
+        const scannedData = JSON.parse(decodedText);
+        const { name, class: kelas } = scannedData;
+        console.log(`Nama: ${name}, Kelas: ${kelas}`);
 
-    // Contoh struktur barcode: {"name":"Yuda Arif Rahman","class":"XI-PPLG-2"}
-    const { name, class: kelas } = scannedData;
-
-    // Tampilkan hasil scan di console (opsional)
-    console.log(`Nama: ${name}, Kelas: ${kelas}`);
-
-    // Kirim data ke server
-    fetch('https://aho-pi.vercel.app/api/absensi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        fetch('https://aho-pi.vercel.app/api/absensi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
             name: name,
             class: kelas,
-            time: new Date().toLocaleString(), // Waktu saat ini
-        }),
-    })
+            time: new Date().toLocaleString(),
+          }),
+        })
         .then((response) => response.json())
         .then((data) => {
-            console.log('Data berhasil disimpan:', data);
+          console.log('Data berhasil disimpan:', data);
+          successContainer.style.display = "block";
+          studentName.textContent = `Nama: ${name}`;
+          studentClass.textContent = `Kelas: ${kelas}`;
+          timeInfo.textContent = `Waktu: ${new Date().toLocaleString()}`;
         })
         .catch((error) => {
-            console.error('Terjadi kesalahan:', error);
+          console.error('Terjadi kesalahan:', error);
+          displayErrorPopup("Terjadi kesalahan saat menyimpan data.");
         });
 
-    html5QrCode.stop();
-  } catch (error) {
-    console.error("QR Code error:", error);
-    alert("QR Code tidak valid atau format salah.");
+        html5QrCode.stop();
+      } catch (error) {
+        console.error("QR Code error:", error);
+        alert("QR Code tidak valid atau format salah.");
+      }
+    }
+
+    const onScanFailure = (error) => {
+      console.warn("Scan gagal:", error);
+    };
+
+    html5QrCode
+      .start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        onScanSuccess,
+        onScanFailure
+      )
+      .catch((err) => alert("Harap izinkan akses kamera untuk melakukan scan."));
+  });
+
+  function displayErrorPopup(message) {
+    const errorPopup = document.getElementById("errorPopup");
+    const errorMessage = document.getElementById("errorMessage");
+    errorMessage.textContent = message;
+    errorPopup.style.display = "block";
   }
-};
-      
-      const onScanFailure = (error) => console.warn("Scan gagal:", error);
 
-      html5QrCode
-        .start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: 250 },
-          onScanSuccess,
-          onScanFailure
-        )
-        .catch((err) => alert("Harap izinkan akses kamera untuk melakukan scan."));
-    });
+  function closePopup() {
+    const errorPopup = document.getElementById("errorPopup");
+    errorPopup.style.display = "none";
+  }
 
-    function displayErrorPopup(message) {
-      const errorPopup = document.getElementById("errorPopup");
-      const errorMessage = document.getElementById("errorMessage");
-      errorMessage.textContent = message;
-      errorPopup.style.display = "block";
-    }
-
-    function closePopup() {
-      const errorPopup = document.getElementById("errorPopup");
-      errorPopup.style.display = "none";
-    }
-
-    function resetScan() {
-      location.reload();
-    }
-  </script>
+  function resetScan() {
+    location.reload();
+  }
+</script>
 </body>
 </html>
