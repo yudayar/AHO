@@ -7,6 +7,12 @@ const customParseFormat = require('dayjs/plugin/customParseFormat');
 
 dayjs.extend(customParseFormat);
 
+app.use(cors({
+  origin: 'https://aho-jade.vercerl.app', // Ganti dengan domain kamu
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
+
 const app = express();
 const port = process.env.PORT || 3000;
 
