@@ -223,50 +223,53 @@
       }
 
       const onScanSuccess = (decodedText) => {
-        if (!checkAccessTime()) {
-          displayErrorPopup("Ooppss, maaf absensi telah ditutup.");
-          return;
-        }
+  if (!checkAccessTime()) {
+    displayErrorPopup("Ooppss, maaf absensi telah ditutup.");
+    return;
+  }
 
-        try {
-          const qrData = JSON.parse(decodedText);
-          if (!qrData.name || !qrData.class) {
-            throw new Error("QR Code tidak memiliki data yang lengkap.");
-          }
+  try {
+    const qrData = JSON.parse(decodedText);
+    if (!qrData.name || !qrData.class) {
+      throw new Error("QR Code tidak memiliki data yang lengkap.");
+    }
 
-          const { name, class: studentClassData } = qrData;
+    const { name, class: studentClassData } = qrData;
 
-          studentName.textContent = `Nama: ${name}`;
-          studentClass.textContent = `Kelas: ${studentClassData}`;
-          timeInfo.textContent = `Waktu: ${new Date().toLocaleString()}`;
+    studentName.textContent = `Nama: ${name}`;
+    studentClass.textContent = `Kelas: ${studentClassData}`;
+    timeInfo.textContent = `Waktu: ${new Date().toLocaleString()}`;
 
-          successContainer.style.display = "block";
-          qrBox.style.display = "none";
-          headingText.style.display = "none";
-          scheduleText.style.display = "none";
+    successContainer.style.display = "block";
+    qrBox.style.display = "none";
+    headingText.style.display = "none";
+    scheduleText.style.display = "none";
 
-          fetch("/absensi", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name,
-              class: studentClassData,
-              time: new Date().toLocaleString(),
-            }),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.message) console.log(data.message);
-            })
-            .catch((error) => console.error("Error:", error));
+    // Mengirim data ke server
+    fetch('https://aho-pi.vercel.app/absensi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        class: studentClassData,
+        time: new Date().toLocaleString(),
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Data berhasil disimpan:', data);
+    })
+    .catch(error => {
+      console.error('Terjadi kesalahan:', error);
+    });
 
-          html5QrCode.stop();
-        } catch (error) {
-          console.error("QR Code error:", error);
-          alert("QR Code tidak valid atau format salah.");
-        }
-      };
-
+    html5QrCode.stop();
+  } catch (error) {
+    console.error("QR Code error:", error);
+    alert("QR Code tidak valid atau format salah.");
+  }
+};
+      
       const onScanFailure = (error) => console.warn("Scan gagal:", error);
 
       html5QrCode
