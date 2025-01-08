@@ -23,7 +23,6 @@ const db = mysql.createConnection({
     queueLimit: 0,
 });
 
-
 db.connect((err) => {
     if (err) {
         console.error('Error connecting to database:', err);
@@ -79,8 +78,10 @@ app.post('/absensi', (req, res) => {
         const correctedTime = time.replace(/\./g, ':');
         const formattedTime = dayjs(correctedTime, 'D/M/YYYY, HH:mm:ss', true).format('YYYY-MM-DD HH:mm:ss');
         if (!formattedTime || formattedTime === 'Invalid Date') {
-            throw new Error(Invalid time value: ${time});
+            throw new Error(`Invalid time value: ${time}`);
         }
+
+        console.log(`Inserting data into database: name = ${name}, class = ${studentClass}, time = ${formattedTime}`);
 
         const query = 'INSERT INTO attendance (name, class, time) VALUES (?, ?, ?)';
         db.query(query, [name, studentClass, formattedTime], (err) => {
@@ -120,6 +121,7 @@ app.post('/absensi', (req, res) => {
         });
     }
 });
+
 // History API
 app.get('/api/history', (req, res) => {
     const filePath = path.join(__dirname, 'data', 'data.json');
@@ -163,9 +165,10 @@ app.get('/api/rekap-db', async (req, res) => {
         }
 
         if (conditions.length > 0) {
-            query +=  WHERE ${conditions.join(' AND ')};
+            query += ` WHERE ${conditions.join(' AND ')}`;
         }
 
+        console.log('Executing query:', query);
         const [rows] = await db.promise().query(query, values);
 
         const rekap = rows.reduce((acc, row) => {
