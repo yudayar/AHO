@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AHO - Scan QR</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="/img/319725507_553156856272605_7083694533489981635_n-removebg-preview.png" rel="shortcut icon">
+</head>
+<body>
+    <header>
+        <img src="/img/319725507_553156856272605_7083694533489981635_n-removebg-preview.png" alt="AHO Logo" class="logo">
+        <h1>AHO</h1>
+      </header>
+
+      <div>
+        <input type="text" id="history-name-input" placeholder="Masukkan nama">
+        <button id="history-search-btn">Cari Riwayat</button>
+    </div>
+    <ul id="history-result"></ul>        
+
+      <nav class="bottom-nav">
+        <a href="/home" onclick="showLoader()" class="nav-item"><i class="fas fa-home"></i></a>
+        <a href="/scan" onclick="showLoader()" class="nav-item"><i class="fas fa-qrcode"></i></a>
+        <a href="/history" onclick="showLoader()" class="nav-item"><i class="fas fa-history"></i></a>
+      </nav>  
+    
+      <div class="loader-popup" id="loaderPopup">
+        <div class="loader-dots">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    
+    <script src="main.js"></script>
+    </body>
+    </html>

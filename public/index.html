@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AHO - Absensi Himpunan Online</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Passero+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="../assets/img/319725507_553156856272605_7083694533489981635_n-removebg-preview.png" rel="shortcut icon">
+
+  <style>
+    .welcome-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #ffffff;
+      animation: fadeOut 1s ease-in-out 4s forwards;
+    }
+
+    .welcome-text {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .welcome-text .welcome-to {
+      font-family: 'Kaushan Script', cursive;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #368FFB, #5AEBFB);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 40px;
+    }
+
+    .welcome-text .aho {
+      font-family: 'Passero One', cursive;
+      font-size: 3rem;
+      background: linear-gradient(135deg, #368FFB, #E560FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 20px;
+    }
+
+    .welcome-text .absensi-online {
+      font-family: 'Passero One', cursive;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #368FFB, #E560FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 10px;
+    }
+
+    .welcome-logo {
+      margin-top: 20px;
+      animation: bounce 2s infinite;
+    }
+
+    .copyright {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9rem;
+      color: #999;
+    }
+
+    /* Animasi */
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-15px);
+      }
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="welcome-screen" id="welcome-screen">
+    <div class="welcome-text">
+      <div class="welcome-to">WELCOME TO</div>
+      <div class="welcome-logo">
+        <img src="/assets/img/scanning-qr-code-picture-image_8729307.png" alt="Logo" width="150">
+      </div>
+      <div class="aho">AHO</div>
+      <div class="absensi-online">Absensi Online Himpunan</div>
+    </div>
+    <div class="copyright">Copyright &copy; 2024 YAR</div>
+  </div>
+
+  <div class="hidden" id="home">
+    <header>
+      <img src="/assets/img/319725507_553156856272605_7083694533489981635_n-removebg-preview.png" alt="Logo" class="logo">
+      <h1>AHO</h1>
+    </header>
+
+    <main>
+      <div class="time-box">
+        <p id="Date">Memuat tanggal...</p>
+        <h2 id="time">Memuat waktu...</h2>
+        <p id="location-status">Lokasi</p>
+      </div>
+
+      <div class="app-suggestion">
+        <p>Coba Juga Aplikasi Kami Yang Lain:</p>
+        <div class="app-card">
+          <img src="/assets/img/logo.png" alt="MyReport Logo">
+          <div>
+            <h3>MyReport</h3>
+            <p>Laporkan Kejadian Di Sekolah!</p>
+          </div>
+          <a href="https://myreportapps.xyz" class="arrow">➔</a>
+        </div>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+       <a href="/index.html" onclick="showLoader()" class="nav-item"><i class="fas fa-home"></i></a>
+      <a href="/scan.html" id="scan-link" onclick="handleScanClick(event)" class="nav-item"><i class="fas fa-qrcode"></i></a>
+    </nav>
+
+    <div class="loader-popup" id="loaderPopup">
+      <div class="loader-dots">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('home').classList.remove('hidden');
+    }, 3500);
+
+    function updateDateTime() {
+      const dateElement = document.getElementById('Date');
+      const timeElement = document.getElementById('time');
+
+      if (!dateElement || !timeElement) return;
+
+      const currentDate = new Date();
+      const formattedDate = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+      const formattedTime = currentDate.toLocaleTimeString();
+
+      dateElement.textContent = formattedDate;
+      timeElement.textContent = formattedTime;
+    }
+    setInterval(updateDateTime, 1000);
+    window.onload = updateDateTime;
+
+    const pkLat = -7.1867038;
+    const pkLon = 108.3617860;
+    let isInRange = false;
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const φ1 = lat1 * Math.PI / 180;
+      const φ2 = lat2 * Math.PI / 180;
+      const Δφ = (lat2 - lat1) * Math.PI / 180;
+      const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+      const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      return R * c;
+    }
+
+    function checkProximity() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
+
+            const distance = calculateDistance(userLat, userLon, pkLat, pkLon);
+            console.log(`Jarak dari Gedung PK: ${distance} meter`);
+
+            const distanceThreshold = 100000;
+            const locationStatus = document.getElementById('location-status');
+
+            if (distance <= distanceThreshold) {
+              locationStatus.textContent = 'Anda Berada Dalam Jangkauan Gedung PK';
+              locationStatus.classList.remove('out-of-range');
+              locationStatus.classList.add('in-range');
+              isInRange = true;
+            } else {
+              locationStatus.textContent = 'Anda Tidak Berada Dalam Jangkauan Gedung PK';
+              locationStatus.classList.remove('in-range');
+              locationStatus.classList.add('out-of-range');
+              isInRange = false;
+            }
+          },
+          (error) => {
+            const locationStatus = document.getElementById('location-status');
+            console.error('Error getting location:', error);
+
+            if (error.code === error.PERMISSION_DENIED) {
+              locationStatus.textContent = 'Lokasi tidak diizinkan';
+            } else if (error.code === error.POSITION_UNAVAILABLE) {
+              locationStatus.textContent = 'Lokasi tidak tersedia';
+            } else if (error.code === error.TIMEOUT) {
+              locationStatus.textContent = 'Waktu untuk mendapatkan lokasi habis';
+            } else {
+              locationStatus.textContent = 'Terjadi kesalahan tidak diketahui';
+            }
+          }
+        );
+      } else {
+        alert('Geolocation tidak didukung oleh browser ini');
+      }
+    }
+
+    function handleScanClick(event) {
+      if (!isInRange) {
+        event.preventDefault();
+        alert('Anda harus berada dalam jangkauan Gedung PK untuk mengakses scan!');
+      }
+    }
+    window.onload = checkProximity;
+  </script>
+</body>
+
+</html>

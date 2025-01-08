@@ -1,0 +1,287 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+  }
+  
+  header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .logo {
+    width: 40px;
+    margin-right: 10px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  main {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+  
+  .time-box {
+    background-color: #fff;
+    margin-top: 0px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .time-box p {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .time-box h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .other-app {
+    margin-top: 20px;
+  }
+  
+  .other-app p {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .app-suggestion p {
+    text-align: left;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .app-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .app-card img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .app-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .app-card p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  .arrow {
+    margin-left: auto;
+    font-size: 1.5rem;
+    color: #333;
+    text-decoration: none;
+  }  
+  
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+  }
+  
+  .nav-item {
+    font-size: 1.5rem;
+    color: #333;
+    text-decoration: none;
+  }
+
+  /*scan qr code*/
+  
+  .success-container {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .success-message {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .info-box {
+    padding: 10px 0;
+    margin: 10px auto;
+    width: 80%;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    border: 2px solid #00b0f0;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 300px;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff; /* Pastikan warna terlihat jelas */
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.nav-item {
+  font-size: 1.5rem;
+  color: #333;
+  text-decoration: none;
+}
+
+/*loader*/
+
+.loader-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.loader-dots {
+  display: flex;
+  gap: 8px;
+}
+.loader-dots div {
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  animation: loader-animation 0.6s infinite alternate;
+}
+.loader-dots div:nth-child(2) { animation-delay: 0.2s; }
+.loader-dots div:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes loader-animation {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-10px); }
+}
+
+.container {
+  text-align: center;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tanggal {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.waktu {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+}
+
+.check-in {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.qr-scan-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Tinggi layar penuh */
+  background-color: #f4f4f4; /* Opsional, untuk latar belakang */
+}
+
+.qr-reader {
+  width: 300px; /* Lebar kamera */
+  height: 300px; /* Tinggi kamera */
+  border: 2px solid #000; /* Opsional, menambahkan border */
+  border-radius: 10px; /* Opsional, membuat sudut membulat */
+  background-color: #e0e0e0; /* Opsional, warna latar kosong */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Opsional, efek bayangan */
+}
+
+#reader {
+  width: 300px;
+  height: 300px;
+  margin: 20px auto;
+  border: 2px solid #000;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #e0e0e0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+#reader video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.success-container {
+  display: none; /* Sembunyikan container sampai data tampil */
+  margin: 20px auto;
+  width: 300px;
+  padding: 10px;
+  border: 2px solid green;
+  border-radius: 10px;
+  background-color: #d4edda;
+}
+
+#location-status {
+  font-weight: bold;
+  font-size: 18px;
+}
+.in-range {
+  color: green !important;
+}
+
+.out-of-range {
+  color: red !important;
+}

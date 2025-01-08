@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="main.js" defer></script>
+    <link href="/img/319725507_553156856272605_7083694533489981635_n-removebg-preview.png" rel="shortcut icon">
+    <style>
+body, h1, h2, h3, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            text-align: center;
+            color: #4a90e2;
+            margin-bottom: 30px;
+        }
+
+        /* Container for the whole page */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Section styling */
+        section {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        /* Filter styling */
+        .filter-container {
+        display: flex;
+        gap: 20px; /* Jarak antar elemen */
+        align-items: center; /* Menyelaraskan vertikal elemen */
+        margin-bottom: 20px;
+    }
+
+    /* Style untuk elemen select dan input date */
+    .filter-container select,
+    .filter-container input {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+        .filter-container div {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .filter-container div:last-child {
+            margin-right: 0;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        select, input[type="date"], button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #4a90e2;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #357ab7;
+    }
+
+        /* Rekap section */
+        #rekap-container {
+            margin-top: 40px;
+        }
+
+        #rekap-list {
+            margin-top: 20px;
+        }
+
+        /* Styling for each class section */
+        #rekap-list div {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #rekap-list h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #rekap-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        #rekap-list li {
+            background-color: #e6f7ff;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .filter-container {
+                flex-direction: column;
+            }
+
+            .filter-container div {
+                margin-bottom: 10px;
+            }
+
+            .filter-container div:last-child {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard Admin</h1>
+
+        <!-- Filter Kelas -->
+        <section>
+            <div class="filter-container">
+                <div>
+                    <label for="filter-kelas">Pilih Kelas:</label>
+                    <select id="filter-kelas">
+                        <option value="">Semua</option>
+                        <option value="X-RPL-1">X-RPL-1</option>
+                        <option value="X-RPL-2">X-RPL-2</option>
+                        <option value="X-GIM">X-GIM</option>
+                        <option value="XI-PPLG-1">XI-PPLG-1</option>
+                        <option value="XI-PPLG-2">XI-PPLG-2</option>
+                        <option value="XI-PPLG-3">XI-PPLG-3</option>
+                        <option value="XII-PPLG-1">XII-PPLG-1</option>
+                        <option value="XII-PPLG-2">XII-PPLG-2</option>
+                        <option value="XII-PPLG-3">XII-PPLG-3</option>
+                        <option value="GURU">GURU</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="filter-tanggal">Pilih Tanggal:</label>
+                    <input type="date" id="filter-tanggal">
+                </div>
+                <div>
+                    <button id="btn-filter">Terapkan Filter</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rekap Data -->
+        <section id="rekap-container" style="display: none;">
+            <h2>Rekap Absensi</h2>
+            <div id="rekap-list">Loading...</div>
+        </section>
+    </div>
+
+    <script>
+        // Ambil elemen filter dan tombol
+        const filterKelas = document.getElementById('filter-kelas');
+        const filterTanggal = document.getElementById('filter-tanggal');
+        const btnFilter = document.getElementById('btn-filter');
+        const rekapContainer = document.getElementById('rekap-container');
+
+        // Fungsi untuk fetch data rekap setelah filter diterapkan
+        const fetchData = (kelas = '', tanggal = '') => {
+    const url = `/api/rekap-db?kelas=${encodeURIComponent(kelas)}&tanggal=${encodeURIComponent(tanggal)}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(rekap => {
+            const container = document.getElementById('rekap-list');
+            container.innerHTML = '';
+
+            if (Object.keys(rekap).length === 0) {
+                container.innerHTML = '<p>Tidak ada data absensi untuk ditampilkan.</p>';
+                return;
+            }
+
+            let totalRekap = 0; // Variabel untuk menyimpan total absensi
+
+            Object.keys(rekap).forEach(kelas => {
+                if (kelas.toUpperCase() !== 'GURU') {
+                    totalRekap += rekap[kelas].count; // Tambahkan jumlah absensi kecuali kelas GURU
+                }
+
+                const kelasDiv = document.createElement('div');
+                kelasDiv.innerHTML = `
+                    <h3>${kelas} (${rekap[kelas].count} Orang)</h3>
+                    <ul>
+                        ${rekap[kelas].students.map(siswa => `<li>${siswa}</li>`).join('')}
+                    </ul>`;
+                container.appendChild(kelasDiv);
+            });
+
+            // Tambahkan total rekap di atas daftar kelas
+            const totalDiv = document.createElement('div');
+            totalDiv.innerHTML = `
+                <h3>Total Absensi Seluruh Kelas: ${totalRekap} Orang</h3>
+            `;
+            container.prepend(totalDiv);
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            const container = document.getElementById('rekap-list');
+            container.innerHTML = '<p>Gagal memuat data. Coba lagi nanti.</p>';
+        });
+};
+
+        // Event listener untuk tombol filter
+        btnFilter.addEventListener('click', () => {
+            const kelas = filterKelas.value;
+            const tanggal = filterTanggal.value;
+
+            // Tampilkan rekap absensi setelah filter
+            rekapContainer.style.display = 'block';
+            fetchData(kelas, tanggal);
+        });
+    </script>
+</body>
+</html>
